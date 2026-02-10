@@ -1,4 +1,23 @@
+# Credenciais
+.env
+profiles.yml
 
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# dbt
 target/
 dbt_packages/
 logs/
+dbt_modules/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
