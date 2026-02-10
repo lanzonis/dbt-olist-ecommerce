@@ -1,0 +1,147 @@
+version: 2
+
+models:
+  - name: stg_olist__orders
+    description: "Pedidos limpos e padronizados do Olist"
+    columns:
+      - name: order_id
+        description: "ID único do pedido"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "ID do cliente"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_olist__customers')
+              field: customer_id
+      - name: order_status
+        description: "Status do pedido"
+        tests:
+          - accepted_values:
+              values: ['delivered', 'shipped', 'canceled', 'unavailable', 
+                      'invoiced', 'processing', 'created', 'approved']
+      - name: purchased_at
+        description: "Data e hora da compra"
+        tests:
+          - not_null
+
+  - name: stg_olist__customers
+    description: "Clientes únicos"
+    columns:
+      - name: customer_id
+        description: "ID único do cliente"
+        tests:
+          - unique
+          - not_null
+      - name: customer_unique_id
+        description: "ID único do cliente na base (pode ter múltiplos customer_id)"
+        tests:
+          - not_null
+      - name: state
+        description: "Estado brasileiro (UF)"
+        tests:
+          - not_null
+
+  - name: stg_olist__products
+    description: "Produtos com categorias traduzidas"
+    columns:
+      - name: product_id
+        description: "ID único do produto"
+        tests:
+          - unique
+          - not_null
+      - name: category_english
+        description: "Categoria do produto em inglês"
+        tests:
+          - not_null
+
+  - name: stg_olist__order_items
+    description: "Itens individuais dos pedidos"
+    columns:
+      - name: order_id
+        description: "ID do pedido"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_olist__orders')
+              field: order_id
+      - name: product_id
+        description: "ID do produto"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_olist__products')
+              field: product_id
+      - name: seller_id
+        description: "ID do vendedor"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_olist__sellers')
+              field: seller_id
+      - name: price
+        description: "Preço do item"
+        tests:
+          - not_null
+
+  - name: stg_olist__payments
+    description: "Pagamentos dos pedidos"
+    columns:
+      - name: order_id
+        description: "ID do pedido"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_olist__orders')
+              field: order_id
+      - name: payment_type
+        description: "Tipo de pagamento"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['credit_card', 'boleto', 'voucher', 'debit_card', 'not_defined']
+      - name: payment_value
+        description: "Valor do pagamento"
+        tests:
+          - not_null
+
+  - name: stg_olist__reviews
+    description: "Avaliações dos pedidos com análise de sentimento"
+    columns:
+      - name: review_id
+        description: "ID único da avaliação"
+        tests:
+          - not_null
+      - name: order_id
+        description: "ID do pedido avaliado"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_olist__orders')
+              field: order_id
+      - name: review_score
+        description: "Nota de 1 a 5"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: review_sentiment
+        description: "Sentimento da avaliação"
+        tests:
+          - accepted_values:
+              values: ['positive', 'neutral', 'negative']
+
+  - name: stg_olist__sellers
+    description: "Vendedores cadastrados"
+    columns:
+      - name: seller_id
+        description: "ID único do vendedor"
+        tests:
+          - unique
+          - not_null
+      - name: state
+        description: "Estado do vendedor"
+        tests:
+          - not_null

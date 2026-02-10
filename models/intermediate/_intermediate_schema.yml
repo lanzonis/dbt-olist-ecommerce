@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: int_orders__enriched
+    description: |
+      Pedidos enriquecidos com informações de clientes, itens, pagamentos e reviews.
+      Este é o modelo principal para análises de pedidos completos.
+    columns:
+      - name: order_id
+        description: "ID único do pedido"
+        tests:
+          - unique
+          - not_null
+      - name: order_status
+        description: "Status do pedido"
+        tests:
+          - not_null
+      - name: total_value
+        description: "Valor total do pedido (itens + frete)"
+      - name: total_paid
+        description: "Valor total pago"
+      - name: delivery_sla_days
+        description: "Diferença em dias entre entrega real e estimada (negativo = atrasado)"
+      - name: delivery_time_days
+        description: "Tempo total de entrega em dias desde a compra"
+      - name: avg_review_score
+        description: "Nota média da avaliação (1-5)"
