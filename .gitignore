@@ -1,6 +1,8 @@
 # Credenciais
 .env
 profiles.yml
+!.env.example
+!.profiles.yml.example
 
 # Python
 venv/
@@ -13,6 +15,10 @@ target/
 dbt_packages/
 logs/
 dbt_modules/
+
+# Histórico / shell
+.psql_history
+.bash_history
 
 # IDEs
 .vscode/
